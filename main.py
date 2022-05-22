@@ -1,144 +1,120 @@
-class Ksiazka:
-  def __init__(self, tytul, autor):
-    self.tytul=str(tytul)
-    self.autor=str(autor)
+class Egzemplarz():
+    def __init__ (self, tytul, autor, rokWydania, wypozyczony):
+        self.tytul = str(tytul)
+        self.autor = str(autor)
+        self.rokWydania = int(rokWydania)
+        self.wypozyczony = wypozyczony
 
-class Egzemplarz:
-  wypozyczony = False
+    def dodaj_egzemplarz(self, egzemplarze): 
+        egzemplarze.append(Egzemplarz(self.tytul, self.autor, self.rokWydania, self.wypozyczony))
+        return True
 
-  def __init__(self, tytul, autor, rokWydania):  
-    self.tytul=str(tytul)
-    self.autor=str(autor)
-    self.rokWydania=int(rokWydania)
-    wypozyczony = False
+    def wypozycz_egzemplarz(tytul, egzemplarze):
+        egzTF = False
+        for i in range(len(egzemplarze)):
+            egzemplarz = egzemplarze[i]
+            if egzemplarz.tytul == tytul and egzemplarz.wypozyczony == False:
+                egzemplarz.wypozyczony = True
+                egzTF = True
+        return egzTF
 
-class Biblioteka:
-    ksiazki = []
-    egzemplarze = []
-    czytelnicy = []
-
-    def __init__(self, limit):
-      self.limit=int(limit)
-
-    def dostepni_czytelnicy(self, nazwisko) -> bool:
-      self.nazwisko=nazwisko
-      czytelnikTF = False
-      for czytelnik in self.czytelnicy:
-        if czytelnik.nazwisko == nazwisko:
-          czytelnikTF = True
-      return czytelnikTF
-  
-    def dostepne_ksiazki(self, tytul, autor)-> bool:
-      self.tytul=tytul
-      self.autor=autor
-      ksiazkaTF = False
-      for ksiazka in self.ksiazki:
-        if ksiazka.tytul == tytul and ksiazka.autor == autor:
-          ksiazkaTF = True
-      return ksiazkaTF
-  
-    def dostepne_egzemplarze(self, tytul)-> bool:
-      self.tytul=tytul
-      egzTF = False
-      for egzemplarz in self.egzemplarze:
-        if egzemplarz.tytul == tytul and egzemplarz.wypozyczony == False:
-          egzTF = True
-      return egzTF
-
-    def dodaj_egzemplarz_ksiazki(self, tytul, autor, rokWydania):
-          ksiazka = self.dostepne_egzemplarze(tytul)
-          if ksiazka == False:
-              ksiazka = Ksiazka(tytul, autor)
-              self.ksiazki.append(ksiazka)
-          self.egzemplarze.append(Egzemplarz(tytul, autor, rokWydania))
-
-    def wypozycz_biblioteka(self, nazwisko, tytul)->bool:
-      czytelnik = self.dostepni_czytelnicy(nazwisko)
-      if czytelnik == False:
-        czytelnik = Czytelnik(nazwisko)
-        self.czytelnicy.append(czytelnik)
-      if(len(czytelnik.wypozyczenia) >= 3):
-        return False
-      if(czytelnik.dostepne_egzemplarze(tytul) == True):
-        return False
-      egzemplarz = self.dostepne_egzemplarze(tytul)
-      if(egzemplarz != True):
-        return False
-      egzemplarz.wypozyczony == True
-      czytelnik.wypozycz_czytelnik(egzemplarz)
-      return True
-
-    def oddaj_biblioteka(self, nazwisko, tytul)->bool:
-      czytelnik = self.dostepni_czytelnicy(nazwisko)
-      if(czytelnik != True):
-        return False
-      egzemplarz = czytelnik.dostepne_egzemplarze(tytul)
-      if(egzemplarz != True):
-        return False
-      egzemplarz.wypozyczony == False
-      czytelnik.oddaj_czytelnik(tytul)
-      return True
-
-class Czytelnik:
-  wypozyczenia = []
-  def __init__(self, nazwisko):
-    self.nazwisko=str(nazwisko)
-
-  def wypozycz_czytelnik(self, nazwisko, tytul)->bool:
-    #egzemplarz = Egzemplarz(tytul, autor, rokWydania)
-    #self.wypozyczenia.append(egzemplarz)
-    #return True
-    biblioteka=Biblioteka(3)
-    czytelnik = biblioteka.dostepni_czytelnicy(nazwisko)
-    if czytelnik == False:
-      czytelnik = Czytelnik(nazwisko)
-      biblioteka.czytelnicy.append(czytelnik)
-    if(len(czytelnik.wypozyczenia) >= 3):
-        return False
-    if(czytelnik.dostepne_egzemplarze(tytul) == True):
-        return False
-    egzemplarz = biblioteka.dostepne_egzemplarze(tytul)
-    if(egzemplarz != True):
-        return False
-    egzemplarz.wypozyczony == True
-    czytelnik.wypozycz_czytelnik(egzemplarz)
-    return True    
+    def oddaj_egzemplarz(tytul, egzemplarze):
+        egzTF = False
+        for i in range(len(egzemplarze)):
+            egzemplarz = egzemplarze[i]
+            if egzemplarz.tytul == tytul and egzemplarz.wypozyczony == True:
+                egzemplarz.wypozyczony = False
+                egzTF = True
+        return egzTF
 
 
-  def oddaj_czytelnik(self, tytul)->bool:
-    wypozyczenia_lista = self.wypozyczenia
-    for egzemplarz in wypozyczenia_lista:
-      if egzemplarz.tytul == tytul:
-        self.wypozyczenia.remove(egzemplarz)
-      if(len(wypozyczenia_lista) == len(self.wypozyczenia)):
-        return False
-    return True
+class Czytelnik():
+    def __init__(self, nazwisko):
+        self.nazwisko = nazwisko
 
-biblioteka=Biblioteka(3)
-pozycje=[]
+    def dodaj_czytelnika(self, czytelnicy):
+        czytelnicy.append(Czytelnik(self.nazwisko))
+
+    def sprawdz_czy_czytelnik_jest_na_liscie(czytelnicy, nazwisko):
+      for i in range(len(czytelnicy)):
+        temp = czytelnicy[i]
+        if nazwisko == temp.nazwisko:
+            return True
+      return False
+
+class Wypozyczenie():
+    def __init__(self, nazwisko, tytul):
+        self.nazwisko = str(nazwisko)
+        self.tytul = str(tytul)
+
+    def dodaj_wypozyczenie(self, wypozyczenia):
+        wypozyczenia.append(Wypozyczenie(self.nazwisko, self.tytul))
+    
+    def sprawdz_czy_mozna_wypozyczyc_czytelnikowi(nazwisko, wypozyczenia):
+        sprawdzarka_wypozyczenTF = True
+        licznik_wypozyczen = 0
+        for i in range(len(wypozyczenia)):
+            wypozyczenie = wypozyczenia[i]
+            if wypozyczenie.nazwisko == nazwisko:
+                licznik_wypozyczen = licznik_wypozyczen + 1
+        if licznik_wypozyczen > 2:
+            sprawdzarka_wypozyczenTF = False
+        else: 
+            sprawdzarka_wypozyczenTF = True
+        return sprawdzarka_wypozyczenTF
+
+    def sprawdz_czy_wypozyczono(nazwisko, tytul, wypozyczenia):
+        wypTF = False
+        for i in range(len(wypozyczenia)):
+            wypozyczenie = wypozyczenia[i]
+            if wypozyczenie.nazwisko == nazwisko and wypozyczenie.tytul == tytul:
+                wypTF = True
+        return wypTF
+        
+    def oddaj_wypozyczenie(nazwisko, tytul, wypozyczenia):
+        wypTF = False
+        for i in range(len(wypozyczenia)):
+            wypozyczenie = wypozyczenia[i]
+            if wypozyczenie.nazwisko == nazwisko and wypozyczenie.tytul == tytul:
+                wypozyczenia.pop(i)
+                wypTF = True
+        return wypTF
+    
+czytelnicy = []
+egzemplarze = []
+wypozyczenia = []
+
 n=int(input())
-for i in range (0,n):
-  input_git = input().replace('(', '').replace(')', '').replace(' "', '').replace('"', '').replace('\r', '').replace('\n', '').split(",")
-  if input_git[0] == 'dodaj':
-      dodaj = biblioteka.dodaj_egzemplarz_ksiazki(input_git[1], input_git[2], input_git[3])
-      print(dodaj)
-  wypozyczenie = True    
-  if input_git[0] == 'wypozycz':
-      czytelnik=Czytelnik(input_git[1])
-      wypozycz_biblioteka = biblioteka.wypozycz_biblioteka(input_git[1], input_git[2])
-      wypozycz_czytelnik = czytelnik.wypozycz_czytelnik(input_git[1], input_git[2])
-      if wypozycz_biblioteka == wypozycz_czytelnik:
-        print(wypozyczenie)
-      else:
-        wypozyczenie = False
-        print(wypozyczenie)
-  oddanie = True
-  if input_git[0] == 'oddaj':
-      czytelnik=Czytelnik(input_git[1])
-      oddaj_biblioteka = biblioteka.oddaj_biblioteka(input_git[1], input_git[2])
-      oddaj_czytelnik = czytelnik.oddaj_czytelnik(input_git[2])
-      if oddaj_biblioteka == oddaj_czytelnik:
-        print(oddanie)
-      else:
-        oddanie = False
-        print(oddanie)
+for i in range(0, n):
+    input_git = input().replace('(', '').replace(')', '').replace(' "', '').replace('"', '').replace('\r', '').replace('\n', '').split(",")
+    
+    if input_git[0] == "dodaj":
+        dodaj = Egzemplarz.dodaj_egzemplarz((Egzemplarz(input_git[1], input_git[2], input_git[3], False)), egzemplarze)
+        print(dodaj)
+    
+    if input_git[0] == "wypozycz":
+        wypozyczTF = False
+        czy_czytelnik_juz_jest_na_liscie = Czytelnik.sprawdz_czy_czytelnik_jest_na_liscie(czytelnicy, input_git[1])
+        if czy_czytelnik_juz_jest_na_liscie == False:
+            Czytelnik.dodaj_czytelnika((Czytelnik(input_git[1])), czytelnicy)
+        czy_mozna_wypozyczyc_czytelnikowi = Wypozyczenie.sprawdz_czy_mozna_wypozyczyc_czytelnikowi(input_git[1], wypozyczenia)
+        if czy_mozna_wypozyczyc_czytelnikowi == True:
+            czy_wypozyczono = Wypozyczenie.sprawdz_czy_wypozyczono(input_git[1], input_git[2], wypozyczenia)
+            if czy_wypozyczono == False:
+                wypozycz_egzemplarz = Egzemplarz.wypozycz_egzemplarz(input_git[2], egzemplarze)
+                print(wypozycz_egzemplarz)
+                if wypozycz_egzemplarz == True:
+                    Wypozyczenie.dodaj_wypozyczenie(Wypozyczenie(input_git[1], input_git[2]), wypozyczenia)
+            else:
+                print(wypozyczTF)
+        else:
+            print(wypozyczTF)
+    
+    if input_git[0] == "oddaj":
+        sprawdz_czy_wypozyczono = Wypozyczenie.sprawdz_czy_wypozyczono(input_git[1], input_git[2], wypozyczenia)
+        if sprawdz_czy_wypozyczono == False:
+            print(sprawdz_czy_wypozyczono)
+        else:
+            oddaj = Wypozyczenie.oddaj_wypozyczenie(input_git[1], input_git[2], wypozyczenia)
+            Egzemplarz.oddaj_egzemplarz(input_git[2], egzemplarze)
+            print(oddaj)
