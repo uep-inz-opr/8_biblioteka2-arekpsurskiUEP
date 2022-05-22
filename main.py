@@ -1,5 +1,3 @@
-import numpy as np
-
 class Egzemplarz():
     def __init__ (self, tytul, autor, rokWydania, wypozyczony):
         self.tytul = str(tytul)
