@@ -6,11 +6,11 @@ class Ksiazka:
 class Egzemplarz:
   wypozyczony = False
 
-  def __init__(self, tytul, autor, rokWydania, wypozyczony):  
+  def __init__(self, tytul, autor, rokWydania):  
     self.tytul=str(tytul)
     self.autor=str(autor)
     self.rokWydania=int(rokWydania)
-    self.wypozyczony=bool(wypozyczony)
+    wypozyczony = False
 
 class Biblioteka:
     ksiazki = []
@@ -21,7 +21,7 @@ class Biblioteka:
       self.limit=int(limit)
 
     def dostepni_czytelnicy(self, nazwisko) -> bool:
-      self.nazwisko=naziwsko
+      self.nazwisko=nazwisko
       czytelnikTF = False
       for czytelnik in self.czytelnicy:
         if czytelnik.nazwisko == nazwisko:
@@ -64,8 +64,8 @@ class Biblioteka:
       egzemplarz = self.dostepne_egzemplarze(tytul)
       if(egzemplarz != True):
         return False
-      egzemplarz.wypozycozny == True
-      czytelnik.wypozycz(egzemplarz)
+      egzemplarz.wypozyczony == True
+      czytelnik.wypozycz_czytelnik(egzemplarz)
       return True
 
     def oddaj_biblioteka(self, nazwisko, tytul)->bool:
@@ -76,7 +76,7 @@ class Biblioteka:
       if(egzemplarz != True):
         return False
       egzemplarz.wypozyczony == False
-      czytelnik.oddaj(tytul)
+      czytelnik.oddaj_czytelnik(tytul)
       return True
 
 class Czytelnik:
@@ -84,22 +84,37 @@ class Czytelnik:
   def __init__(self, nazwisko):
     self.nazwisko=str(nazwisko)
 
-  def wypozycz_czytelnik(self, tytul, autor, rokWydania)->bool:
-    egzemplarz = Egzemplarz(tytul, autor, rokWydania)
-    self.wypozyczenia.append(egzemplarz)
-    return True
+  def wypozycz_czytelnik(self, nazwisko, tytul)->bool:
+    #egzemplarz = Egzemplarz(tytul, autor, rokWydania)
+    #self.wypozyczenia.append(egzemplarz)
+    #return True
+    biblioteka=Biblioteka(3)
+    czytelnik = biblioteka.dostepni_czytelnicy(nazwisko)
+    if czytelnik == False:
+      czytelnik = Czytelnik(nazwisko)
+      biblioteka.czytelnicy.append(czytelnik)
+    if(len(czytelnik.wypozyczenia) >= 3):
+        return False
+    if(czytelnik.dostepne_egzemplarze(tytul) == True):
+        return False
+    egzemplarz = biblioteka.dostepne_egzemplarze(tytul)
+    if(egzemplarz != True):
+        return False
+    egzemplarz.wypozyczony == True
+    czytelnik.wypozycz_czytelnik(egzemplarz)
+    return True    
+
 
   def oddaj_czytelnik(self, tytul)->bool:
     wypozyczenia_lista = self.wypozyczenia
     for egzemplarz in wypozyczenia_lista:
-      if egzemplarz.tytul == tytul and egzemplarz.autor == autor:
+      if egzemplarz.tytul == tytul:
         self.wypozyczenia.remove(egzemplarz)
       if(len(wypozyczenia_lista) == len(self.wypozyczenia)):
         return False
     return True
 
 biblioteka=Biblioteka(3)
-czytelnik=Czytelnik()
 pozycje=[]
 n=int(input())
 for i in range (0,n):
@@ -109,8 +124,9 @@ for i in range (0,n):
       print(dodaj)
   wypozyczenie = True    
   if input_git[0] == 'wypozycz':
+      czytelnik=Czytelnik(input_git[1])
       wypozycz_biblioteka = biblioteka.wypozycz_biblioteka(input_git[1], input_git[2])
-      wypozycz_czytelnik = czytelnik.wypozycz_czytelnik(input_git[1], input_git[2], input_git[3])
+      wypozycz_czytelnik = czytelnik.wypozycz_czytelnik(input_git[1], input_git[2])
       if wypozycz_biblioteka == wypozycz_czytelnik:
         print(wypozyczenie)
       else:
@@ -118,8 +134,9 @@ for i in range (0,n):
         print(wypozyczenie)
   oddanie = True
   if input_git[0] == 'oddaj':
+      czytelnik=Czytelnik(input_git[1])
       oddaj_biblioteka = biblioteka.oddaj_biblioteka(input_git[1], input_git[2])
-      oddaj_czytelnik = czytelnik.oddaj_czytelnik(input_git[1])
+      oddaj_czytelnik = czytelnik.oddaj_czytelnik(input_git[2])
       if oddaj_biblioteka == oddaj_czytelnik:
         print(oddanie)
       else:
