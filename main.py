@@ -76,7 +76,7 @@ class Wypozyczenie():
         for i in range(len(wypozyczenia)):
             wypozyczenie = wypozyczenia[i]
             if wypozyczenie.nazwisko == nazwisko and wypozyczenie.tytul == tytul:
-                wypozyczenie.pop(i)
+                del wypozyczenie
                 wypTF = True
         return wypTF
     
