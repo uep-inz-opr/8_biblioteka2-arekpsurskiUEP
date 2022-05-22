@@ -46,7 +46,7 @@ class Biblioteka:
       return egzTF
 
     def dodaj_egzemplarz_ksiazki(self, tytul, autor, rokWydania):
-          ksiazka = self.dostepne_egzemplarze(tytul, autor)
+          ksiazka = self.dostepne_egzemplarze(tytul)
           if ksiazka == False:
               ksiazka = Ksiazka(tytul, autor)
               self.ksiazki.append(ksiazka)
@@ -99,6 +99,7 @@ class Czytelnik:
     return True
 
 biblioteka=Biblioteka(3)
+czytelnik=Czytelnik()
 pozycje=[]
 n=int(input())
 for i in range (0,n):
@@ -106,9 +107,21 @@ for i in range (0,n):
   if input_git[0] == 'dodaj':
       dodaj = biblioteka.dodaj_egzemplarz_ksiazki(input_git[1], input_git[2], input_git[3])
       print(dodaj)
+  wypozyczenie = True    
   if input_git[0] == 'wypozycz':
-      wypozycz = biblioteka.wypozycz(input_git[1], input_git[2])
-      print(wypozycz)
+      wypozycz_biblioteka = biblioteka.wypozycz_biblioteka(input_git[1], input_git[2])
+      wypozycz_czytelnik = czytelnik.wypozycz_czytelnik(input_git[1], input_git[2], input_git[3])
+      if wypozycz_biblioteka == wypozycz_czytelnik:
+        print(wypozyczenie)
+      else:
+        wypozyczenie = False
+        print(wypozyczenie)
+  oddanie = True
   if input_git[0] == 'oddaj':
-      oddaj = biblioteka.oddaj(input_git[1], input_git[2])
-      print(oddaj)
+      oddaj_biblioteka = biblioteka.oddaj_biblioteka(input_git[1], input_git[2])
+      oddaj_czytelnik = czytelnik.oddaj_czytelnik(input_git[1])
+      if oddaj_biblioteka == oddaj_czytelnik:
+        print(oddanie)
+      else:
+        oddanie = False
+        print(oddanie)
