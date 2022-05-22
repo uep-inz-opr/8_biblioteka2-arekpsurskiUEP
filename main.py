@@ -1,3 +1,5 @@
+import numpy as np
+
 class Egzemplarz():
     def __init__ (self, tytul, autor, rokWydania, wypozyczony):
         self.tytul = str(tytul)
@@ -76,7 +78,7 @@ class Wypozyczenie():
         for i in range(len(wypozyczenia)):
             wypozyczenie = wypozyczenia[i]
             if wypozyczenie.nazwisko == nazwisko and wypozyczenie.tytul == tytul:
-                wypozyczenia.pop(i)
+                wypozyczenie.pop(i)
                 wypTF = True
         return wypTF
     
