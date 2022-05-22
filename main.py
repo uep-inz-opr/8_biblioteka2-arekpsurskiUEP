@@ -46,7 +46,7 @@ class Biblioteka:
       return egzTF
 
     def dodaj_egzemplarz_ksiazki(self, tytul, autor, rokWydania):
-          ksiazka = self.dostepne_egz(tytul, autor)
+          ksiazka = self.dostepne_egzemplarze(tytul, autor)
           if ksiazka == False:
               ksiazka = Ksiazka(tytul, autor)
               self.ksiazki.append(ksiazka)
